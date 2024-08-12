@@ -47,26 +47,39 @@ public class ContactServiceImpl implements ContactService{
     }
 
     @Override
-    public UpdateResponse updateContact(CreateContactRequest contactRequest, FindContactRequest findContactRequest) {
-        Contact contact = findContactByIdApi(findContactRequest);
-        contact.setId(findContactRequest.getId());
-        contact.setFirstName(contactRequest.getFirstName());
-        contact.setLastName(contactRequest.getLastName());
-        contact.setEmail(contactRequest.getEmail());
-        contact.setPhoneNumber(contactRequest.getPhoneNumber());
+    public UpdateResponse updateContact(CreateContactRequest createContactRequest) {
+        Contact contact = findContactByIdApi(createContactRequest);
+        contact.setId(createContactRequest.getId());
+        contact.setFirstName(createContactRequest.getFirstName());
+        contact.setLastName(createContactRequest.getLastName());
+        contact.setEmail(createContactRequest.getEmail());
+        contact.setPhoneNumber(createContactRequest.getPhoneNumber());
         contactRepository.save(contact);
         UpdateResponse updateResponse = new UpdateResponse();
         updateResponse.setMessage("Contact updated");
         return updateResponse;
     }
 
+
+
     @Override
-    public DeleteResponse deleteContact(String id) {
-        return null;
+    public DeleteResponse deleteContact(FindContactRequest findContactRequest) {
+        DeleteResponse deleteResponse = new DeleteResponse();
+        Optional<Contact> contactOptional = contactRepository.findById(findContactRequest.getId());
+        Contact contact = new Contact();
+        if(contactOptional.isPresent()) {
+            contact = contactOptional.get();
+            contactRepository.delete(contact);
+            deleteResponse.setMessage("Contact deleted");
+            return deleteResponse;
+        }else{
+            deleteResponse.setMessage("Contact not found");
+            return deleteResponse;
+        }
     }
 
-    public Contact findContactByIdApi(FindContactRequest findContactRequest) {
-        Optional<Contact> contactOptional = contactRepository.findById(findContactRequest.getId());
+    public Contact findContactByIdApi(CreateContactRequest createContactRequest) {
+        Optional<Contact> contactOptional = contactRepository.findById(createContactRequest.getId());
         Contact contact = contactOptional.get();
         return contact;
     }

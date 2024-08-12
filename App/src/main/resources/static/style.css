@@ -1,0 +1,4 @@
+.addContactContainer{
+    display: flex;
+    flex-direction: column;
+}

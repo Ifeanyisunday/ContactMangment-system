@@ -96,20 +96,40 @@ class ContactServiceImplTest {
         contactRequest1.setPhoneNumber("07045678901");
         contactService.createContact(contactRequest1);
 
-        FindContactRequest findContactRequest = new FindContactRequest();
-        findContactRequest.setId("1");
         CreateContactRequest contactRequestNew = new CreateContactRequest();
-        contactRequestNew.setId(findContactRequest.getId());
+        contactRequestNew.setId("1");
         contactRequestNew.setFirstName("martin");
         contactRequestNew.setLastName("okoro");
         contactRequestNew.setEmail("martO@gmail.com");
         contactRequestNew.setPhoneNumber("07043452060");
-        contactService.updateContact(contactRequestNew, findContactRequest);
+        contactService.updateContact(contactRequestNew);
         assertEquals("[Contact(id=1, firstName=martin, lastName=okoro, email=martO@gmail.com, phoneNumber=07043452060), Contact(id=2, firstName=jack, lastName=man, email=jackman@gmail.com, phoneNumber=07045678901)]", contactService.findAllContacts());
     }
 
     @Test
     void deleteContact() {
+        contactRepository.deleteAll();
+        CreateContactRequest contactRequest = new CreateContactRequest();
+        contactRequest.setId("1");
+        contactRequest.setFirstName("ify");
+        contactRequest.setLastName("sun");
+        contactRequest.setEmail("sundayjnr@gmail.com");
+        contactRequest.setPhoneNumber("08127980250");
+        contactService.createContact(contactRequest);
+
+        CreateContactRequest contactRequest1 = new CreateContactRequest();
+        contactRequest1.setId("2");
+        contactRequest1.setFirstName("jack");
+        contactRequest1.setLastName("man");
+        contactRequest1.setEmail("jackman@gmail.com");
+        contactRequest1.setPhoneNumber("07045678901");
+        contactService.createContact(contactRequest1);
+        assertEquals(2, contactRepository.count());
+
+        FindContactRequest findContactRequest = new FindContactRequest();
+        findContactRequest.setId("2");
+        contactService.deleteContact(findContactRequest);
+        assertEquals(1, contactRepository.count());
     }
 
 }

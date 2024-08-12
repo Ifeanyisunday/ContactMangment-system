@@ -17,6 +17,6 @@ public interface ContactService {
     public CreateContactResponse createContact(CreateContactRequest createContactRequest);
     public String findAllContacts();
     public String findContactById(FindContactRequest findContactRequest);
-    public UpdateResponse updateContact(CreateContactRequest contactRequest, FindContactRequest findContactRequest);
-    public DeleteResponse deleteContact(String id);
+    public UpdateResponse updateContact(CreateContactRequest createContactRequest);
+    public DeleteResponse deleteContact(FindContactRequest findContactRequest);
 }
