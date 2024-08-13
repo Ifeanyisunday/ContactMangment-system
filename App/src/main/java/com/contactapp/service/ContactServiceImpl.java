@@ -8,6 +8,7 @@ import com.contactapp.dto.requests.UpdateContactRequest;
 import com.contactapp.dto.response.CreateContactResponse;
 import com.contactapp.dto.response.DeleteResponse;
 import com.contactapp.dto.response.UpdateResponse;
+import com.contactapp.exception.ContactNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +74,8 @@ public class ContactServiceImpl implements ContactService{
             deleteResponse.setMessage("Contact deleted");
             return deleteResponse;
         }else{
-            deleteResponse.setMessage("Contact not found");
+//            deleteResponse.setMessage("Contact not found");
+            throw new ContactNotFoundException("contact not found");
             return deleteResponse;
         }
     }
