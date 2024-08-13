@@ -1,10 +1,13 @@
 package com.contactapp.service;
 
+import com.contactapp.data.model.User;
 import com.contactapp.data.repository.ContactRepository;
-import com.contactapp.dto.requests.CreateContactRequest;
-import com.contactapp.dto.requests.FindContactRequest;
+import com.contactapp.data.repository.UserRepository;
+import com.contactapp.dto.requests.*;
+import com.contactapp.exception.EmptySpaceException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,6 +20,12 @@ class ContactServiceImplTest {
 
     @Autowired
     private ContactService contactService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void testCreateContact() {
@@ -130,6 +139,59 @@ class ContactServiceImplTest {
         findContactRequest.setId("2");
         contactService.deleteContact(findContactRequest);
         assertEquals(1, contactRepository.count());
+    }
+
+
+    @Test
+    void testRegisterUser(){
+        userRepository.deleteAll();
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setName("starboi");
+        registerRequest.setEmail("sun10");
+        registerRequest.setGender("male");
+        registerRequest.setPhoneNo("12345678901");
+        userService.registerUser(registerRequest);
+        assertEquals(1, userRepository.count());
+    }
+
+
+    @Test
+    void testLoginUser(){
+        userRepository.deleteAll();
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setName("starboi");
+        registerRequest.setEmail("sun10");
+        registerRequest.setGender("male");
+        registerRequest.setPhoneNo("12345678901");
+        userService.registerUser(registerRequest);
+        assertEquals(1, userRepository.count());
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail("sun10");
+        userService.loginUser(loginRequest);
+        assertTrue(userRepository.findByEmail(loginRequest.getEmail()).get().isLoggedIn());
+    }
+
+    @Test
+    void testLogoutUser(){
+        userRepository.deleteAll();
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setName("starboi");
+        registerRequest.setEmail("sun10");
+        registerRequest.setGender("male");
+        registerRequest.setPhoneNo("12345678901");
+        userService.registerUser(registerRequest);
+        assertEquals(1, userRepository.count());
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail("sun10");
+        userService.loginUser(loginRequest);
+        assertTrue(userRepository.findByEmail(loginRequest.getEmail()).get().isLoggedIn());
+
+        LogOutRequest logOutRequest = new LogOutRequest();
+        logOutRequest.setEmail("sun10");
+        userService.logOutUser(logOutRequest);
+        assertFalse(userRepository.findByEmail(logOutRequest.getEmail()).get().isLoggedIn());
     }
 
 }

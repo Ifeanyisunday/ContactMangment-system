@@ -76,7 +76,7 @@ public class ContactServiceImpl implements ContactService{
         }else{
 //            deleteResponse.setMessage("Contact not found");
             throw new ContactNotFoundException("contact not found");
-            return deleteResponse;
+//            return deleteResponse;
         }
     }
 
